@@ -23,7 +23,7 @@
 <body>
 <%
     String id = request.getParameter("id");
-    Candidate candidate = new Candidate(0, "");
+    Candidate candidate = new Candidate(0, "", 0);
     if (id != null) {
         candidate = PsqlStore.instOf().findByIdCandidate(Integer.valueOf(id));
     }
@@ -47,6 +47,17 @@
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>
             </div>
+            <% if (id != null) { %>
+            <div class="card-header">Фото</div>
+            <div class="card-body">
+                <form action="<%=request.getContextPath()%>/upload?id=<%=candidate.getId()%>" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="file" name="file">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            </div>
+            <% } %>
         </div>
     </div>
 </div>

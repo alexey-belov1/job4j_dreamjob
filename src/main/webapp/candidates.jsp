@@ -42,7 +42,16 @@
                                 <a href='<c:url value="/candidate/edit.jsp?id=${can.id}"/>'>
                                     <i class="fa fa-edit mr-3"></i>
                                 </a>
+                                <a href='<c:url value="/delete?id=${can.id}"/>'>
+                                    <i class="fa fa-trash"></i>
+                                </a>
                                 <c:out value="${can.name}"/>
+                            </td>
+                            <td>
+                                <a href="<c:url value='/download?photoId=${can.photoId}'/>">Download</a>
+                            </td>
+                            <td>
+                                <img src="<c:url value='/download?photoId=${can.photoId}'/>" width="100px" height="100px"/>
                             </td>
                         </tr>
                     </c:forEach>
