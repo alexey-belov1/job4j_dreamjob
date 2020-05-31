@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Photo;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -78,6 +79,27 @@ public class PsqlStore implements Store {
             e.printStackTrace();
         }
         return candidates;
+    }
+
+    @Override
+    public Collection<User> findAllUsers() {
+        List<User> users = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users")) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    users.add(new User(
+                            it.getInt("id"),
+                            it.getString("name"),
+                            it.getString("email"),
+                            it.getString("password")
+                    ));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     @Override
@@ -195,6 +217,47 @@ public class PsqlStore implements Store {
     }
 
     @Override
+    public void save(User user) {
+        if (user.getId() == 0) {
+            create(user);
+        } else {
+            update(user);
+        }
+    }
+
+    private int create(User user) {
+        int result = 0;
+        try (Connection cn = pool.getConnection();
+             PreparedStatement st = cn.prepareStatement("INSERT INTO users(name, email, password) VALUES(?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+            st.setString(1, user.getName());
+            st.setString(2, user.getEmail());
+            st.setString(3, user.getPassword());
+            st.execute();
+            try (ResultSet id = st.getGeneratedKeys()) {
+                if (id.next()) {
+                    result = id.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private void update(User user) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement st = cn.prepareStatement("UPDATE users SET name = (?), email = (?), password = (?) WHERE id = (?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+            st.setString(1, user.getName());
+            st.setString(2, user.getEmail());
+            st.setString(3, user.getPassword());
+            st.setInt(4, user.getId());
+            st.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public Post findByIdPost(int id) {
         Post post = null;
         try (Connection cn = pool.getConnection();
@@ -249,6 +312,29 @@ public class PsqlStore implements Store {
     }
 
     @Override
+    public User findByEmailUser(String email) {
+        User user = null;
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users WHERE email = (?)")) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("password")
+                    );
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    @Override
     public void deleteCandidate(int id) {
         try (Connection cn = pool.getConnection();
              PreparedStatement st = cn.prepareStatement("DELETE FROM candidate WHERE id = (?)")) {
@@ -265,6 +351,16 @@ public class PsqlStore implements Store {
              PreparedStatement st = cn.prepareStatement("DELETE FROM photo WHERE id = (?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
             st.setInt(1, id);
             st.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void deleteUser(int id) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement st = cn.prepareStatement("DELETE FROM users WHERE id = (?)")) {
+            st.setInt(1, id);
+            st.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }

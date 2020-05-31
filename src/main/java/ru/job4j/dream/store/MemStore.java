@@ -3,6 +3,7 @@ package ru.job4j.dream.store;
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Photo;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
 import java.util.Collection;
 import java.util.Map;
@@ -45,6 +46,11 @@ public class MemStore implements Store {
     }
 
     @Override
+    public Collection<User> findAllUsers() {
+        return null;
+    }
+
+    @Override
     public void save(Post post) {
         if (post.getId() == 0) {
             post.setId(POST_ID.incrementAndGet());
@@ -66,6 +72,10 @@ public class MemStore implements Store {
     }
 
     @Override
+    public void save(User user) {
+    }
+
+    @Override
     public Post findByIdPost(int id) {
         return posts.get(id);
     }
@@ -81,10 +91,19 @@ public class MemStore implements Store {
     }
 
     @Override
+    public User findByEmailUser(String email) {
+        return null;
+    }
+
+    @Override
     public void deleteCandidate(int id) {
     }
 
     @Override
     public void deletePhoto(int id) {
+    }
+
+    @Override
+    public void deleteUser(int id) {
     }
 }
