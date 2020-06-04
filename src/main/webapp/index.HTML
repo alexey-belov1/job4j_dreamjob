@@ -18,6 +18,19 @@
                 alert(msg + $('#desc').attr('title'));
             }
         }
+
+        function addRow() {
+            let name = $('#name').val();
+            let surname = $('#surname').val();
+            let sex = $('input[name=sex]:checked').length > 0 ? $('input[name=sex]:checked').val() : '';
+            let desc = $('#desc').val();
+            $('#table tr:last').after('<tr>'
+                + '<td>' + name +'</td>'
+                + '<td>' + surname +'</td>'
+                + '<td>' + sex +'</td>'
+                + '<td>' + desc +'</td>'
+                + '</tr>');
+        }
     </script>
 </head>
 <body>
@@ -48,10 +61,11 @@
                         <textarea class="form-control" id="desc" rows="3" title="описание"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary" onclick="validate();">Отправить</button>
+                    <input type="button" class="btn btn-primary" onclick="addRow();" value="Добавить">
                 </form>
             </div>
         </div>
-        <table class="table">
+        <table class="table" id="table">
             <thead>
                 <tr>
                     <th>Имя</th>
