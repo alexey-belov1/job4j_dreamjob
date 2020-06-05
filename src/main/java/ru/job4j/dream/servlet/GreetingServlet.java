@@ -1,5 +1,7 @@
 package ru.job4j.dream.servlet;
 
+import com.google.gson.JsonObject;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +16,10 @@ public class GreetingServlet extends HttpServlet {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
         String name = req.getParameter("name");
+        JsonObject json = new JsonObject();
+        json.addProperty("text", "Nice to meet you, " + name);
         PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        writer.println("Nice to meet you, " + name);
+        writer.println(json);
         writer.flush();
     }
 }
