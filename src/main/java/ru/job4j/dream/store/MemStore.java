@@ -1,9 +1,6 @@
 package ru.job4j.dream.store;
 
-import ru.job4j.dream.model.Candidate;
-import ru.job4j.dream.model.Photo;
-import ru.job4j.dream.model.Post;
-import ru.job4j.dream.model.User;
+import ru.job4j.dream.model.*;
 
 import java.util.Collection;
 import java.util.Map;
@@ -30,9 +27,9 @@ public class MemStore implements Store {
         posts.put(1, new Post(1, "Junior Java Job"));
         posts.put(2, new Post(2, "Middle Java Job"));
         posts.put(3, new Post(3, "Senior Java Job"));
-        candidates.put(1, new Candidate(1, "Junior Java", 0));
-        candidates.put(2, new Candidate(2, "Middle Java", 0));
-        candidates.put(3, new Candidate(3, "Senior Java", 0));
+        candidates.put(1, new Candidate(1, "Junior Java", 0, 0));
+        candidates.put(2, new Candidate(2, "Middle Java", 0, 0));
+        candidates.put(3, new Candidate(3, "Senior Java", 0, 0));
     }
 
     public static Store instOf() {
@@ -52,6 +49,11 @@ public class MemStore implements Store {
     @Override
     public Collection<User> findAllUsers() {
         return users.values();
+    }
+
+    @Override
+    public Collection<City> findAllCities() {
+        return null;
     }
 
     @Override
@@ -84,6 +86,11 @@ public class MemStore implements Store {
     }
 
     @Override
+    public void save(City city) {
+
+    }
+
+    @Override
     public Post findByIdPost(int id) {
         return posts.get(id);
     }
@@ -95,6 +102,11 @@ public class MemStore implements Store {
 
     @Override
     public Photo findByIdPhoto(int id) {
+        return null;
+    }
+
+    @Override
+    public City findByIdCity(int id) {
         return null;
     }
 
@@ -121,5 +133,10 @@ public class MemStore implements Store {
     @Override
     public void deleteUser(int id) {
         users.remove(id);
+    }
+
+    @Override
+    public void deleteCity(int id) {
+
     }
 }

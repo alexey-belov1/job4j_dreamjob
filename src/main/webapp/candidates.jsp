@@ -17,6 +17,26 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8080/dreamjob/city',
+                dataType: 'json'
+            }).done(function(data) {
+                let cities = $('span.city');
+                let map = new Map();
+                data.forEach(el => map.set(el.id, el.name));
+                for (let i = 0; i < cities.length; i++) {
+                    cities[i].innerText = map.get(Number(cities[i].getAttribute('name')));
+                }
+            }).fail(function(err){
+                alert(err);
+            });
+        });
+    </script>
 
     <title>Работа мечты</title>
 </head>
@@ -54,6 +74,9 @@
                                     <i class="fa fa-trash"></i>
                                 </a>
                                 <c:out value="${can.name}"/>
+                            </td>
+                            <td>
+                                <span class="city" name='<c:out value="${can.cityId}"/>'></span>
                             </td>
                             <td>
                                 <a href="<c:url value='/download?photoId=${can.photoId}'/>">Download</a>

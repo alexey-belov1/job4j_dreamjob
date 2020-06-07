@@ -20,8 +20,9 @@ public class CandidateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         int id = Integer.valueOf(req.getParameter("id"));
-        Candidate candidate = (id != 0) ? PsqlStore.instOf().findByIdCandidate(id) : new Candidate(0, "", 0);
+        Candidate candidate = (id != 0) ? PsqlStore.instOf().findByIdCandidate(id) : new Candidate(0, "", 0, 0);
         candidate.setName(req.getParameter("name"));
+        candidate.setCityId(Integer.valueOf(req.getParameter("city")));
         PsqlStore.instOf().save(candidate);
         doGet(req, resp);
     }
